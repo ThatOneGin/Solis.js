@@ -24,18 +24,18 @@ Example use:
 
     // current active page
     // at document.location.hash
-    const page_map = router({
-      "/": div(
-        html_tag("h1", "Hello, Solis!"),
-        html_tag("a", "this goes to foo page").attr("href", "#/foo")
+    const page_map = Solis.router({
+      "/": Solis.div(
+        Solis.html_tag("h1", "Hello, Solis!"),
+        Solis.html_tag("a", "this goes to foo page").attr("href", "#/foo")
       ),
-      "/foo": div(
-        html_tag("h1", "Foo page"),
-        html_tag("p", "goto 404 page ", html_tag("a", "click me!").attr("href", "#/404"))
+      "/foo": Solis.div(
+        Solis.html_tag("h1", "Foo page"),
+        Solis.html_tag("p", "goto 404 page ", Solis.html_tag("a", "click me!").attr("href", "#/404"))
       ),
-      "/404": div(
-        html_tag("h1", "404: page not found."), // the href is the root page.
-        html_tag("p", "go to sweet ", html_tag("a", "home").attr("href", "#/"))
+      "/404": Solis.div(
+        Solis.html_tag("h1", "404: page not found."), // the href is the root page.
+        Solis.html_tag("p", "go to sweet ", Solis.html_tag("a", "home").attr("href", "#/"))
       )
     });
 

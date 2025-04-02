@@ -22,46 +22,71 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-function html_tag(name, ...children) {
-  let res = document.createElement(name);
-  for (const child of children) {
-    if (typeof(child) == "string") {
-      res.appendChild(document.createTextNode(child));
-    } else {
-      res.appendChild(child);
+/* The Solis framework main class */
+class Solis {
+  /**
+   * 
+   * @param {*} name 
+   * @param  {...any} children 
+   * @returns {HTMLElement}
+   */
+  static html_tag(name, ...children) {
+    let res = document.createElement(name);
+    for (const child of children) {
+      if (typeof (child) == "string") {
+        res.appendChild(document.createTextNode(child));
+      } else {
+        res.appendChild(child);
+      }
     }
+    res.attr = function (index, value) {
+      this.setAttribute(index, value);
+      return this;
+    }
+    res.event = function name(event, fn) {
+      this.addEventListener(event, fn);
+    }
+    return res;
   }
-  res.attr = function (index, value) {
-    this.setAttribute(index, value);
-    return this;
-  }
-  res.event = function name(event, fn) {
-    this.addEventListener(event, fn);
-  }
-  return res;
-}
 
-function div(...children) {
-  return html_tag("div", ...children);
-}
-
-function update_hash(routes, res) {
-  let location = document.location.hash.split("#")[1];
-  if (!location) {
-    location = "/";
+  static div(...children) {
+    return this.html_tag("div", ...children);
   }
-  if (!(location in routes)) {
-    console.assert("/404" in routes);
-    location = "/404";
-  }
-  res.replaceChildren(routes[location]);
-  return res;
-}
 
-function router(routes) {
-  const res = html_tag("div");
-  update_hash(routes, res);
-  window.addEventListener("hashchange", () => update_hash(routes, res));
-  res.refresh = () => update_hash(routes, res);
-  return res;
+  static h1(...children) {
+    return this.html_tag("h1", ...children);
+  }
+
+  /**
+   * 
+   * @param {Object} routes 
+   * @param {HTMLElement} res 
+   * @returns 
+   */
+  static #update_hash(routes, res) {
+    let location = document.location.hash.split("#")[1];
+    if (!location) {
+      location = "/";
+    }
+    if (!(location in routes)) {
+      console.assert("/404" in routes);
+      location = "/404";
+    }
+    res.replaceChildren(routes[location]);
+    return res;
+  }
+
+  /**
+   * Returns an object with current route.
+   * @param {*} routes 
+   * @returns 
+   */
+  static router(routes) {
+    const res = this.html_tag("div");
+    this.#update_hash(routes, res);
+    window.addEventListener("hashchange", () => this.#update_hash(routes, res));
+    
+    res.refresh = () => this.#update_hash(routes, res);
+    return res;
+  }
 }
